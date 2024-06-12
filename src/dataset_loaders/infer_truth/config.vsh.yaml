@@ -11,6 +11,7 @@ arguments:
     description: "The output file with inferred ground truth."
     example: "dataset.h5ad"
     required: false
+    direction: output
 resources:
   - type: python_script
     path: script.py
