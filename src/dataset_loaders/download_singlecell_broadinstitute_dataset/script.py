@@ -1,15 +1,30 @@
-import anndata as ad
 import scanpy as sc
 import pandas as pd
+import re
+import os
+import urllib.request
 
 ## VIASH START
 par = {
-  "input": "resources/datasets/SCP2167/raw_data/SCP2167",
-  "output": "resources/datasets/SCP2167/raw_dataset.h5ad"
+  "dataset_curl_config": "resources/datasets/raw/singlecell_broadinstitute_configs/SCP2162.txt",
+  "dataset_id": "singlecell_broadinstitute_scp2162",
+  "dataset_name": "Mouse hippocampus Slide-tags snRNA-seq",
+  "dataset_url": "https://singlecell.broadinstitute.org/single_cell/study/SCP2162/slide-tags-snrna-seq-on-mouse-hippocampus#study-summary",
+  "dataset_reference": "doi: 10.1038/s41586-023-06837-4",
+  "dataset_summary": "Slide-tags snRNA-seq data on the mouse hippocampus.",
+  "dataset_description": "Recent technological innovations have enabled the high-throughput quantification of gene expression and epigenetic regulation within individual cells, transforming our understanding of how complex tissues are constructed. Missing from these measurements, however, is the ability to routinely and easily spatially localise these profiled cells. We developed a strategy, Slide-tags, in which single nuclei within an intact tissue section are ‘tagged’ with spatial barcode oligonucleotides derived from DNA-barcoded beads with known positions. These tagged nuclei can then be used as input into a wide variety of single-nucleus profiling assays. We used Slide-tags to profile two different stages of development in the mouse brain.\n\nOverall design 	Slide-tags was used to spatially barcode nuclei from 20-micron thick fresh frozen tissue sections. These spatially barcoded nuclei were then used as input for 10x Genomics Chromium v3.1 snRNA-seq.",
+  "dataset_organism": "mus_musculus",
+  "output": "resources/datasets/SCP2162/raw_dataset.h5ad"
+}
+meta = {
+  "temp_dir": "/tmp"
 }
 ## VIASH END
 
-expression = f"{par['input']}/expression/64265d4084cbeaef62ef36a9"
+temp_dir = f'{meta["temp_dir"]}/downloader_singlecell_broadinstitute_dataset'
+
+if not os.path.exists(temp_dir):
+  os.makedirs(temp_dir)
 
 def read_typed_csv(path: str) -> pd.DataFrame:
   col_names = pd.read_csv(path, nrows=1).columns.tolist()
@@ -35,13 +50,61 @@ def read_typed_csv(path: str) -> pd.DataFrame:
 
   return df
 
+with open(par["dataset_curl_config"], "r") as file:
+  curl_config = file.readlines()
 
-adata = sc.read_10x_mtx(expression)
+# split config by \n\n
+curl_config_split = "".join(curl_config).split("\n\n")
+
+# turn into a list of dicts with 'key="value"\nkey="value"'
+curl_config_dict_entry = '([^=]*)="(.*)"'
+curl_config_dicts = [
+  dict([
+    re.match(curl_config_dict_entry, x).groups()
+    for x in config.split("\n")
+    if re.match(curl_config_dict_entry, x) is not None
+  ])
+  for config in curl_config_split
+]
+# remove empty entries
+curl_config_dicts = [x for x in curl_config_dicts if x]
+
+def get_download_info(filename_query):
+  return next(
+    (
+      {
+        "url": x["url"],
+        "output": x["output"],
+        "dest": f"{temp_dir}/{x['output']}"
+      }
+      for x in curl_config_dicts
+      if re.match(filename_query, x["output"])
+    ),
+    None
+  )
+
+# fetch 10x_mtx data. get url for row with "matrix.mtx.gz" in output
+matrix_mtx = get_download_info(".*matrix.mtx.gz$")
+barcodes_tsv = get_download_info(".*barcodes.tsv.gz$")
+features_tsv = get_download_info(".*features.tsv.gz$")
+
+def download_file(info):
+  os.makedirs(os.path.dirname(info["dest"]), exist_ok=True)
+  urllib.request.urlretrieve(info["url"], info["dest"])
+
+# download mtx
+download_file(matrix_mtx)
+download_file(barcodes_tsv)
+download_file(features_tsv)
+
+adata = sc.read_10x_mtx(os.path.dirname(matrix_mtx["dest"]))
 adata
 # AnnData object with n_obs × n_vars = 14165 × 36601
 #     var: 'gene_ids', 'feature_types'
 
-cluster = read_typed_csv(f"{par['input']}/cluster/humancortex_cluster.csv")
+cluster_info = get_download_info(".*_cluster.csv$")
+download_file(cluster_info)
+cluster = read_typed_csv(cluster_info["dest"])
 cluster
 #                             X          Y    cell_type
 # NAME                                                 
@@ -59,7 +122,9 @@ cluster
 
 # [4067 rows x 3 columns]
 
-spatial = read_typed_csv(f"{par['input']}/cluster/humancortex_spatial.csv")
+spatial_info = get_download_info(".*_spatial.csv$")
+download_file(spatial_info)
+spatial = read_typed_csv(spatial_info["dest"])
 spatial
 #                               X            Y    cell_type
 # NAME                                                     
@@ -77,8 +142,9 @@ spatial
 
 # [4067 rows x 3 columns]
 
-
-metadata = read_typed_csv(f"{par['input']}/metadata/humancortex_metadata.csv")
+metadata_info = get_download_info(".*_metadata.csv$")
+download_file(metadata_info)
+metadata = read_typed_csv(metadata_info["dest"])
 metadata
 #                    biosample_id       donor_id         species  ... library_preparation_protocol__ontology_label     sex      cluster
 # NAME                                                            ...                                                                  
@@ -120,9 +186,15 @@ output.obs["cell_type"] = list(cluster.loc[index_intersect, "cell_type"].values)
 output.obsm["X_umap"] = cluster.loc[index_intersect, ["X", "Y"]].values
 output.obsm["spatial"] = spatial.loc[index_intersect, ["X", "Y"]].values
 
+# add uns
+cols = ["dataset_id", "dataset_name", "dataset_url", "dataset_reference", "dataset_summary", "dataset_description", "dataset_organism"]
+for col in cols:
+  output.uns[col] = par[col]
+
 # AnnData object with n_obs × n_vars = 4065 × 36601
 #     obs: 'biosample_id', 'donor_id', 'species', 'species__ontology_label', 'disease', 'disease__ontology_label', 'organ', 'organ__ontology_label', 'library_preparation_protocol', 'library_preparation_protocol__ontology_label', 'sex', 'cluster', 'cell_type'
 #     var: 'gene_ids', 'feature_types'
 #     obsm: 'X_umap', 'spatial'
 
+os.makedirs(os.path.dirname(par["output"]), exist_ok=True)
 output.write_h5ad(par["output"], compression="gzip")
