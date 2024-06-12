@@ -18,9 +18,8 @@ from funs import non_mirrored_product, onehot_groupby, format_truth
 # read the dataset
 adata = ad.read_h5ad(par["input"])
 adata.uns['dataset_organism'] = 'homo_sapiens' # NOTE:: Delete
-adata.uns['groupby'] = 'cell_type' # NOTE:: Delete
 # Get needed params
-groupby = adata.uns['groupby']
+groupby = 'cell_type' 
 organism = adata.uns['dataset_organism']
 
 # one hot encode cell types
