@@ -5,12 +5,12 @@ arguments:
     name: --input
     description: "The spatial dataset to process."
     example: "dataset.h5ad"
-    required: false
+    required: true
   - type: file
     name: --output
     description: "The output file with inferred ground truth."
     example: "dataset.h5ad"
-    required: false
+    required: true
     direction: output
 resources:
   - type: python_script
