@@ -1,18 +1,30 @@
+name: download_singlecell_broadinstitute_dataset
 namespace: dataset_loader
-info:
-  type: dataset_loader
-  type_info:
-    label: Dataset Loader
-    summary: A dataset loader for the sc-CCC task.
-    description: |
-      A component which loads in a single-cell RNA-seq dataset with ground-truth annotations for the single-cell cell-cell communication task.
+arguments:
 argument_groups:
+  - name: Inputs
+    arguments:
+      - type: file
+        name: --dataset_curl_config
+        description: |
+          Path to the single-cell dataset curl config file as provided by the Broad Institute.
+
+          This file is obtained by browsing one of the datasets on the single cell broad institute website and clicking 'Bulk download' and downloading the curl config file but not yet downloading the individual files.
+
+          Example: https://singlecell.broadinstitute.org/single_cell/study/SCP2162/slide-tags-snrna-seq-on-mouse-hippocampus#study-download
+        example: resources/datasets/raw/singlecell_broadinstitute_configs/SCP2162.txt
+        required: true
+        direction: input
   - name: Metadata
     arguments:
+      - name: "--dataset_id"
+        type: string
+        description: Unique identifier for the dataset.
+        required: trueX
       - name: "--dataset_name"
         type: string
         description: Nicely formatted name.
-        required: true
+        required: trueX
       - name: "--dataset_url"
         type: string
         description: Link to the original source of the dataset.
@@ -39,9 +51,15 @@ argument_groups:
       __merge__: file_dataset_with_ground_truth.yaml
       required: true
       direction: output
-
+resources:
+  - type: python_script
+    path: script.py
 test_resources:
   - type: python_script
     path: /common/src/component_tests/run_and_check_output.py
-  # - path: /resources/datasets
-  #   dest: resources/datasets
+engines:
+  - type: docker
+    image: ghcr.io/openproblems-bio/base_python:1.0.4
+runners:
+  - type: executable
+  - type: nextflow
