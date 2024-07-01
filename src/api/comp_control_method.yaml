@@ -1,0 +1,28 @@
+namespace: control_methods
+info:
+  type: control_method
+  type_info:
+    label: Control Method
+    summary: A control method for the sc-CCC task.
+    description: |
+      A control method to predict cell-cell communication for single-cell datasets.
+arguments:
+  - name: --dataset
+    __merge__: file_dataset.yaml
+    required: true
+    direction: input
+  - name: --ground_truth
+    __merge__: file_ground_truth.yaml
+    required: false
+    direction: input
+  - name: --prediction
+    __merge__: file_prediction.yaml
+    required: true
+    direction: output
+test_resources:
+  - type: python_script
+    path: /common/src/component_tests/run_and_check_output.py
+  - type: python_script
+    path: /common/component_tests/check_method_config.py
+  # - path: /resources/datasets
+  #   dest: resources/datasets

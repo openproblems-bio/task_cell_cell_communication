@@ -1,0 +1,30 @@
+namespace: metrics
+info:
+  type: metric
+  type_info:
+    label: Metric
+    summary: A metric.
+    description: |
+      A metric for evaluating sc-CCC method predictions.
+arguments:
+  - name: "--ground_truth"
+    __merge__: file_ground_truth.yaml
+    direction: input
+    required: true
+  - name: "--prediction"
+    __merge__: file_prediction.yaml
+    direction: input
+    required: true
+  - name: "--score"
+    __merge__: file_score.yaml
+    direction: output
+    required: true
+test_resources:
+  # - type: python_script
+  #   path: /src/common/comp_tests/check_metric_config.py
+  - type: python_script
+    path: /src/common/comp_tests/run_and_check_adata.py
+  - path: /resources/datasets
+    dest: resources/datasets
+  - path: /src/common/library.bib
+      

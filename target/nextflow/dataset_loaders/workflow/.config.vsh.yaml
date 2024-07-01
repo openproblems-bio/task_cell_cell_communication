@@ -1,0 +1,284 @@
+name: "workflow"
+namespace: "dataset_loaders"
+version: "0.0.1"
+argument_groups:
+- name: "Inputs"
+  arguments:
+  - type: "file"
+    name: "--dataset_curl_config"
+    description: "Path to the single-cell dataset curl config file as provided by\
+      \ the Broad Institute.\n\nThis file is obtained by browsing one of the datasets\
+      \ on the single cell broad institute website and clicking 'Bulk download' and\
+      \ downloading the curl config file but not yet downloading the individual files.\n\
+      \nExample: https://singlecell.broadinstitute.org/single_cell/study/SCP2162/slide-tags-snrna-seq-on-mouse-hippocampus#study-download\n"
+    info: null
+    example:
+    - "resources/datasets/raw/singlecell_broadinstitute_configs/SCP2162.txt"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+- name: "Metadata"
+  arguments:
+  - type: "string"
+    name: "--dataset_id"
+    description: "Unique identifier for the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_name"
+    description: "Nicely formatted name."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_url"
+    description: "Link to the original source of the dataset."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_reference"
+    description: "Bibtex reference of the paper in which the dataset was published."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_summary"
+    description: "Short description of the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_description"
+    description: "Long description of the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_organism"
+    description: "The organism of the dataset."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+- name: "Outputs"
+  arguments:
+  - type: "file"
+    name: "--output"
+    info:
+      label: "Dataset With Ground-truth"
+      summary: "A dataset with ground-truth annotations for the sc-CCC task."
+      slots:
+        layers:
+        - type: "integer"
+          name: "counts"
+          description: "Raw counts"
+          required: true
+        obs:
+        - type: "string"
+          name: "cell_type"
+          description: "Cell type annotation."
+          required: true
+        var:
+        - type: "string"
+          name: "feature_id"
+          description: "Ensemble gene ID."
+          required: false
+        - type: "string"
+          name: "feature_symbol"
+          description: "Gene symbol."
+          required: true
+        uns:
+        - type: "string"
+          name: "dataset_id"
+          description: "A unique identifier for the dataset"
+          required: true
+        - name: "dataset_name"
+          type: "string"
+          description: "Nicely formatted name."
+          required: true
+        - type: "string"
+          name: "dataset_url"
+          description: "Link to the original source of the dataset."
+          required: false
+        - name: "dataset_reference"
+          type: "string"
+          description: "Bibtex reference of the paper in which the dataset was published."
+          required: false
+        - name: "dataset_summary"
+          type: "string"
+          description: "Short description of the dataset."
+          required: true
+        - name: "dataset_description"
+          type: "string"
+          description: "Long description of the dataset."
+          required: true
+        - name: "dataset_organism"
+          type: "string"
+          description: "The organism of the sample in the dataset."
+          required: false
+        - type: "dataframe"
+          name: "assumed_truth"
+          description: "A dataframe with the assumed ground truth."
+          required: true
+          columns:
+          - type: "string"
+            name: "source_cell_type"
+            description: "The source cell type."
+            required: true
+          - type: "string"
+            name: "target_cell_type"
+            description: "The target cell type."
+            required: true
+          - type: "string"
+            name: "ligand"
+            description: "The ligand."
+            required: true
+          - type: "string"
+            name: "receptor"
+            description: "The receptor."
+            required: true
+          - type: "boolean"
+            name: "colocalised"
+            description: "Whether or not the ligand and receptor are colocalised."
+            required: true
+    example:
+    - "resources/allen_brain_atlas/dataset.h5ad"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "output"
+    multiple: false
+    multiple_sep: ";"
+resources:
+- type: "nextflow_script"
+  path: "main.nf"
+  is_executable: true
+  entrypoint: "run_wf"
+info: null
+status: "enabled"
+dependencies:
+- name: "dataset_loaders/download_singlecell_broadinstitute_dataset"
+  repository:
+    type: "local"
+- name: "dataset_loaders/infer_truth"
+  repository:
+    type: "local"
+license: "MIT"
+links:
+  repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+  docker_registry: "ghcr.io"
+runners:
+- type: "nextflow"
+  id: "nextflow"
+  directives:
+    tag: "$id"
+  auto:
+    simplifyInput: true
+    simplifyOutput: false
+    transcript: false
+    publish: false
+  config:
+    labels:
+      mem1gb: "memory = 1000000000.B"
+      mem2gb: "memory = 2000000000.B"
+      mem5gb: "memory = 5000000000.B"
+      mem10gb: "memory = 10000000000.B"
+      mem20gb: "memory = 20000000000.B"
+      mem50gb: "memory = 50000000000.B"
+      mem100gb: "memory = 100000000000.B"
+      mem200gb: "memory = 200000000000.B"
+      mem500gb: "memory = 500000000000.B"
+      mem1tb: "memory = 1000000000000.B"
+      mem2tb: "memory = 2000000000000.B"
+      mem5tb: "memory = 5000000000000.B"
+      mem10tb: "memory = 10000000000000.B"
+      mem20tb: "memory = 20000000000000.B"
+      mem50tb: "memory = 50000000000000.B"
+      mem100tb: "memory = 100000000000000.B"
+      mem200tb: "memory = 200000000000000.B"
+      mem500tb: "memory = 500000000000000.B"
+      mem1gib: "memory = 1073741824.B"
+      mem2gib: "memory = 2147483648.B"
+      mem4gib: "memory = 4294967296.B"
+      mem8gib: "memory = 8589934592.B"
+      mem16gib: "memory = 17179869184.B"
+      mem32gib: "memory = 34359738368.B"
+      mem64gib: "memory = 68719476736.B"
+      mem128gib: "memory = 137438953472.B"
+      mem256gib: "memory = 274877906944.B"
+      mem512gib: "memory = 549755813888.B"
+      mem1tib: "memory = 1099511627776.B"
+      mem2tib: "memory = 2199023255552.B"
+      mem4tib: "memory = 4398046511104.B"
+      mem8tib: "memory = 8796093022208.B"
+      mem16tib: "memory = 17592186044416.B"
+      mem32tib: "memory = 35184372088832.B"
+      mem64tib: "memory = 70368744177664.B"
+      mem128tib: "memory = 140737488355328.B"
+      mem256tib: "memory = 281474976710656.B"
+      mem512tib: "memory = 562949953421312.B"
+      cpu1: "cpus = 1"
+      cpu2: "cpus = 2"
+      cpu5: "cpus = 5"
+      cpu10: "cpus = 10"
+      cpu20: "cpus = 20"
+      cpu50: "cpus = 50"
+      cpu100: "cpus = 100"
+      cpu200: "cpus = 200"
+      cpu500: "cpus = 500"
+      cpu1000: "cpus = 1000"
+  debug: false
+  container: "docker"
+build_info:
+  config: "src/dataset_loaders/workflow/config.vsh.yaml"
+  runner: "nextflow"
+  engine: "native"
+  output: "target/nextflow/dataset_loaders/workflow"
+  executable: "target/nextflow/dataset_loaders/workflow/main.nf"
+  viash_version: "0.9.0-RC6"
+  git_commit: "d5987e0e6c48f4b4151938444024d1603486472b"
+  git_remote: "https://github.com/openproblems-bio/task_cell_cell_communication"
+  dependencies:
+  - "target/nextflow/dataset_loaders/download_singlecell_broadinstitute_dataset"
+  - "target/nextflow/dataset_loaders/infer_truth"
+package_config:
+  name: "task_cell_cell_communication"
+  version: "0.0.1"
+  description: "An OpenProblems benchmark on single-cell cell-cell communication.\n"
+  info:
+    test_resources:
+    - type: "s3"
+      path: "s3://openproblems-data/resources_test/cell_cell_communication"
+      dest: "test_resources"
+  viash_version: "0.9.0-RC6"
+  source: "src"
+  target: "target"
+  keywords:
+  - "single-cell"
+  - "cell-cell communication"
+  - "openproblems"
+  - "benchmark"
+  license: "MIT"
+  organization: "openproblems-bio"
+  links:
+    repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+    docker_registry: "ghcr.io"
+    issue_tracker: "https://github.com/openproblems-bio/task_cell_cell_communication/issues"

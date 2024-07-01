@@ -1,0 +1,24 @@
+namespace: methods
+info:
+  type: method
+  type_info:
+    label: Method
+    summary: A method for the sc-CCC task.
+    description: |
+      A method to predict cell-cell communication for single-cell datasets.
+arguments:
+  - name: --dataset
+    __merge__: file_dataset.yaml
+    required: true
+    direction: input
+  - name: --prediction
+    __merge__: file_prediction.yaml
+    required: true
+    direction: output
+test_resources:
+  - type: python_script
+    path: /common/src/component_tests/run_and_check_output.py
+  - type: python_script
+    path: /common/component_tests/check_method_config.py
+  # - path: /resources/datasets
+  #   dest: resources/datasets
