@@ -6,13 +6,13 @@ import urllib.request
 
 ## VIASH START
 par = {
-  "dataset_curl_config": "resources/datasets/raw/singlecell_broadinstitute_configs/SCP2169.txt",
-  "dataset_id": "singlecell_broadinstitute_scp2169",
-  "dataset_name": "Human tonsil Slide-tags snRNA-seq",
-  "dataset_url": "https://singlecell.broadinstitute.org/single_cell/study/SCP2169/slide-tags-snrna-seq-on-human-tonsil#study-summary",
-  "dataset_reference": "doi: 10.1038/s41586-023-06837-4",
-  "dataset_summary": "Slide-tags snRNA-seq data on the human tonsil.",
-  "dataset_description": "Recent technological innovations have enabled the high-throughput quantification of gene expression and epigenetic regulation within individual cells, transforming our understanding of how complex tissues are constructed. Missing from these measurements, however, is the ability to routinely and easily spatially localise these profiled cells. We developed a strategy, Slide-tags, in which single nuclei within an intact tissue section are ‘tagged’ with spatial barcode oligonucleotides derived from DNA-barcoded beads with known positions. These tagged nuclei can then be used as input into a wide variety of single-nucleus profiling assays. We used Slide-tags to profile two different stages of development in the mouse brain.\n\nOverall design 	Slide-tags was used to spatially barcode nuclei from 20-micron thick fresh frozen tissue sections. These spatially barcoded nuclei were then used as input for 10x Genomics Chromium v3.1 snRNA-seq.",
+  "dataset_curl_config": "resources/datasets/raw/singlecell_broadinstitute_configs/SCP2167.txt",
+  "dataset_id": "singlecell_broadinstitute_scp2167",
+  "dataset_name": "--",
+  "dataset_url": "--",
+  "dataset_reference": "--",
+  "dataset_summary": "--",
+  "dataset_description": "--",
   "dataset_organism": "homo_sapiens",
   "output": "resources/datasets/SCP2169/raw_dataset.h5ad"
 }
@@ -84,9 +84,9 @@ def get_download_info(filename_query):
   )
 
 # fetch 10x_mtx data. get url for row with "matrix.mtx.gz" in output
-matrix_mtx = get_download_info(".*matrix.mtx.gz$")
-barcodes_tsv = get_download_info(".*barcodes.tsv.gz$")
-features_tsv = get_download_info(".*features.tsv.gz$")
+matrix_mtx = get_download_info(".*/matrix.mtx.gz$")
+barcodes_tsv = get_download_info(".*/barcodes.tsv.gz$")
+features_tsv = get_download_info(".*/features.tsv.gz$")
 
 def download_file(info):
   os.makedirs(os.path.dirname(info["dest"]), exist_ok=True)

@@ -30,6 +30,8 @@ workflow run_wf {
         ]
       )
 
+      | setState(["output"])
+
   emit:
     output_ch
 }

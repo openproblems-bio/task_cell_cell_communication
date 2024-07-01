@@ -498,9 +498,9 @@ function ViashDockerfile {
 FROM ghcr.io/openproblems-bio/base_python:1.0.4
 ENTRYPOINT []
 LABEL org.opencontainers.image.description="Companion container for running component dataset_loaders download_singlecell_broadinstitute_dataset"
-LABEL org.opencontainers.image.created="2024-07-01T11:32:23Z"
+LABEL org.opencontainers.image.created="2024-07-01T14:40:12Z"
 LABEL org.opencontainers.image.source="https://github.com/openproblems-bio/task_cell_cell_communication"
-LABEL org.opencontainers.image.revision="d5987e0e6c48f4b4151938444024d1603486472b"
+LABEL org.opencontainers.image.revision="f027b6b5ac82027ea33e81262f520060461709f8"
 LABEL org.opencontainers.image.version="build_main"
 
 VIASHDOCKER
@@ -1201,9 +1201,9 @@ def get_download_info(filename_query):
   )
 
 # fetch 10x_mtx data. get url for row with "matrix.mtx.gz" in output
-matrix_mtx = get_download_info(".*matrix.mtx.gz\$")
-barcodes_tsv = get_download_info(".*barcodes.tsv.gz\$")
-features_tsv = get_download_info(".*features.tsv.gz\$")
+matrix_mtx = get_download_info(".*/matrix.mtx.gz\$")
+barcodes_tsv = get_download_info(".*/barcodes.tsv.gz\$")
+features_tsv = get_download_info(".*/features.tsv.gz\$")
 
 def download_file(info):
   os.makedirs(os.path.dirname(info["dest"]), exist_ok=True)

@@ -2931,7 +2931,7 @@ meta = [
     "engine" : "docker",
     "output" : "target/nextflow/dataset_loaders/infer_truth",
     "viash_version" : "0.9.0-RC6",
-    "git_commit" : "d5987e0e6c48f4b4151938444024d1603486472b",
+    "git_commit" : "f027b6b5ac82027ea33e81262f520060461709f8",
     "git_remote" : "https://github.com/openproblems-bio/task_cell_cell_communication"
   },
   "package_config" : {
