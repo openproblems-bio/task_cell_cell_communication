@@ -2997,7 +2997,7 @@ meta = [
     "engine" : "docker",
     "output" : "target/nextflow/dataset_loaders/download_singlecell_broadinstitute_dataset",
     "viash_version" : "0.9.0-RC6",
-    "git_commit" : "75f8ec56dfefa03544380a8dbb414ff0579a3d90",
+    "git_commit" : "5654f6838a515979ea00d75caec9979b30fbf46a",
     "git_remote" : "https://github.com/openproblems-bio/task_cell_cell_communication"
   },
   "package_config" : {

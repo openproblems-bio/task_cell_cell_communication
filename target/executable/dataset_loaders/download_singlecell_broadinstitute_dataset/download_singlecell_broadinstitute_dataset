@@ -498,9 +498,9 @@ function ViashDockerfile {
 FROM ghcr.io/openproblems-bio/base_python:1.0.4
 ENTRYPOINT []
 LABEL org.opencontainers.image.description="Companion container for running component dataset_loaders download_singlecell_broadinstitute_dataset"
-LABEL org.opencontainers.image.created="2024-07-01T11:04:30Z"
+LABEL org.opencontainers.image.created="2024-07-01T11:12:54Z"
 LABEL org.opencontainers.image.source="https://github.com/openproblems-bio/task_cell_cell_communication"
-LABEL org.opencontainers.image.revision="75f8ec56dfefa03544380a8dbb414ff0579a3d90"
+LABEL org.opencontainers.image.revision="5654f6838a515979ea00d75caec9979b30fbf46a"
 LABEL org.opencontainers.image.version="build_main"
 
 VIASHDOCKER
