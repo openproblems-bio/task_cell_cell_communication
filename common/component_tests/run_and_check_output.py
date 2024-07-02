@@ -100,7 +100,11 @@ with open(meta["config"], "r") as file:
 # get resources
 arguments = []
 
-for arg in config["functionality"]["arguments"]:
+for arg_grp in config["argument_groups"]:
+    if arg_grp.get("name") == "Arguments":
+        args = arg_grp["arguments"]
+
+for arg in args:
     new_arg = arg.copy()
     arg_info = new_arg.get("info") or {}
 
@@ -125,7 +129,7 @@ for arg in config["functionality"]["arguments"]:
     
     arguments.append(new_arg)
 
-fun_info = config["functionality"].get("info") or {}
+fun_info = config.get("info") or {}
 if "test_setup" not in fun_info:
     argument_sets = {"run": arguments}
 else:

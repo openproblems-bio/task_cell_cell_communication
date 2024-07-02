@@ -31,8 +31,12 @@ def read_config_slots_info(config_file, slot_mapping = {}):
 
     output_struct_slots = {}
 
+    for arg_grp in config["argument_groups"]:
+      if arg_grp.get("name") == "Arguments":
+          args = arg_grp["arguments"]
+
     # fetch info on which slots should be copied to which file
-    for arg in config["functionality"]["arguments"]:
+    for arg in args:
         # argument is an output file with a slot specification
         if arg["direction"] == "output" and arg.get("info", {}).get("slots"):
             object_name = re.sub("--", "", arg["name"])

@@ -74,13 +74,13 @@ def search_ref_bib(reference):
 
 def check_metric(metric: Dict[str, str])  -> str:
     assert "name" in metric is not None, "name not a field or is empty"
-    assert len(metric["name"]) <= NAME_MAXLEN, f"Component id (.functionality.info.metrics.metric.name) should not exceed {NAME_MAXLEN} characters."
+    assert len(metric["name"]) <= NAME_MAXLEN, f"Component id (.info.metrics.metric.name) should not exceed {NAME_MAXLEN} characters."
     assert "label" in metric is not None, "label not a field in metric or is empty"
     assert "summary" in metric is not None, "summary not a field in metric or is empty"
     assert "FILL IN:" not in metric["summary"], "Summary not filled in"
-    assert len(metric["summary"]) <= SUMMARY_MAXLEN, f"Component id (.functionality.info.metrics.metric.summary) should not exceed {SUMMARY_MAXLEN} characters."
+    assert len(metric["summary"]) <= SUMMARY_MAXLEN, f"Component id (.info.metrics.metric.summary) should not exceed {SUMMARY_MAXLEN} characters."
     assert "description" in metric is not None, "description not a field in metric or is empty"
-    assert len(metric["description"]) <= DESCRIPTION_MAXLEN, f"Component id (.functionality.info.metrics.metric.description) should not exceed {DESCRIPTION_MAXLEN} characters."
+    assert len(metric["description"]) <= DESCRIPTION_MAXLEN, f"Component id (.info.metrics.metric.description) should not exceed {DESCRIPTION_MAXLEN} characters."
     assert "FILL IN:" not in metric["description"], "description not filled in"
     # assert "reference" in metric, "reference not a field in metric"
     if "reference" in metric:
@@ -108,29 +108,29 @@ with open(meta["config"], "r") as file:
                 config = yaml.safe_load(file)
 
 print("check general fields", flush=True)
-assert "name" in config["functionality"] is not None, "Name not a field or is empty"
-assert len(config["functionality"]["name"]) <= NAME_MAXLEN, f"Component id (.functionality.name) should not exceed {NAME_MAXLEN} characters."
-assert "namespace" in config["functionality"] is not None, "namespace not a field or is empty"
+assert "name" in config is not None, "Name not a field or is empty"
+assert len(config["name"]) <= NAME_MAXLEN, f"Component id (.name) should not exceed {NAME_MAXLEN} characters."
+assert "namespace" in config is not None, "namespace not a field or is empty"
 
 
 print("Check info fields", flush=True)
-info = config['functionality']['info']
+info = config["info"]
 assert "type" in info, "type not an info field"
 assert info["type"] == "metric" , f"got {info['type']} expected 'metric'"
 assert "metrics" in info, "metrics not an info field"
 for metric in info["metrics"]:
     check_metric(metric)
 
-print("Check platform fields", flush=True)
-platforms = config['platforms']
-for platform in platforms:
-    if not platform["type"] == "nextflow":
+print("Check runner fields", flush=True)
+runners = config["runners"]
+for runner in runners:
+    if not runner["type"] == "nextflow":
         continue
-    nextflow= platform
+    nextflow= runner
 
-assert nextflow, "nextflow not a platform"
-assert nextflow["directives"], "directives not a field in nextflow platform"
-assert nextflow["directives"]["label"], "label not a field in nextflow platform directives"
+assert nextflow, "nextflow not a runner"
+assert nextflow["directives"], "directives not a field in nextflow runner"
+assert nextflow["directives"]["label"], "label not a field in nextflow runner directives"
 
 assert [i for i in nextflow["directives"]["label"] if i in TIME_LABELS], "time label not filled in"
 assert [i for i in nextflow["directives"]["label"] if i in MEM_LABELS], "mem label not filled in"

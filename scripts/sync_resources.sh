@@ -6,6 +6,6 @@ common/sync_resources/sync_resources \
   --output resources
 
 aws s3 sync resources \
-  s3://openproblems-data/resources_test/cell_cell_communication \
+  s3://openproblems-data/resources/cell_cell_communication \
   --delete \
   --dryrun

@@ -2931,7 +2931,7 @@ meta = [
     "engine" : "docker",
     "output" : "target/nextflow/dataset_loaders/infer_truth",
     "viash_version" : "0.9.0-RC6",
-    "git_commit" : "e257d9c0fa490a161da3fcd7ba94672d7cc081c0",
+    "git_commit" : "08e9bcf8e19c81358a626a725b9372dc0bfa2218",
     "git_remote" : "https://github.com/openproblems-bio/task_cell_cell_communication"
   },
   "package_config" : {
@@ -2942,8 +2942,8 @@ meta = [
       "test_resources" : [
         {
           "type" : "s3",
-          "path" : "s3://openproblems-data/resources_test/cell_cell_communication",
-          "dest" : "test_resources"
+          "path" : "s3://openproblems-data/resources/cell_cell_communication",
+          "dest" : "resources"
         }
       ]
     },
