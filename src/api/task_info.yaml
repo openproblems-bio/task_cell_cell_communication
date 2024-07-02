@@ -1,6 +1,6 @@
 name: cell_cell_communication
 label: Cell-Cell Communication
-summary: Focuses on the prediction of interactions from steady-state, or single-context, single-cell data between source cell types and target cell types.
+summary: Predicting cell-cell interactions between source cell types and target cell types.
 image: "thumbnail.svg"
 motivation: |
   The growing availability of single-cell data has sparked an increased interest in the inference of cell-cell communication (CCC),
