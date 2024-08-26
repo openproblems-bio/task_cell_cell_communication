@@ -20,11 +20,10 @@ arguments:
     direction: output
     required: true
 test_resources:
-  # - type: python_script
-  #   path: /src/common/comp_tests/check_metric_config.py
   - type: python_script
-    path: /src/common/comp_tests/run_and_check_adata.py
-  - path: /resources/datasets
-    dest: resources/datasets
-  - path: /src/common/library.bib
+    path: /src/common/comp_tests/check_config.py
+  - type: python_script
+    path: /src/common/comp_tests/run_and_check_output.py
+  # - path: /resources/datasets
+  #   dest: resources/datasets
       

@@ -1,9 +1,10 @@
 type: file
 example: "resources_test/cell_cell_communication_source_target/allen_brain_atlas/dataset.h5ad"
+label: "Score"
+summary: "Metric score file"
 info:
-  label: "Score"
-  summary: "Metric score file"
-  slots:
+  format:
+    type: h5ad
     uns:
       - type: string
         name: dataset_id
