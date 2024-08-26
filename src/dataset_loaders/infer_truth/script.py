@@ -17,7 +17,7 @@ from funs import non_mirrored_product, onehot_groupby, format_truth
 
 # read the dataset
 adata = ad.read_h5ad(par["input"])
-adata.uns['dataset_organism'] = 'homo_sapiens' # NOTE:: Delete
+
 # Get needed params
 groupby = 'cell_type' 
 organism = adata.uns['dataset_organism']
@@ -27,7 +27,7 @@ li.ut.spatial_neighbors(adata, bandwidth=1000, max_neighbours=10)
 ctdata = onehot_groupby(adata, groupby=groupby)
 
 organism = adata.uns['dataset_organism']
-resource_name = 'mouseconsesnsus' if organism == 'mouse' else 'consensus'
+resource_name = 'mouseconsensus' if organism == 'mus musculus' else 'consensus'
 
 lr = li.mt.bivariate(adata,
                      global_name='morans',
