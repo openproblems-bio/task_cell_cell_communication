@@ -3136,7 +3136,7 @@ meta = [
     "engine" : "native",
     "output" : "target/nextflow/dataset_loaders/workflow",
     "viash_version" : "0.9.0-RC7",
-    "git_commit" : "6dd67c464127defc2b827d2e28817b093048b925",
+    "git_commit" : "91fed210c132e880b83a00a90d8d603d2e842537",
     "git_remote" : "https://github.com/openproblems-bio/task_cell_cell_communication"
   },
   "package_config" : {

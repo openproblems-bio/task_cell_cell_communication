@@ -464,9 +464,9 @@ RUN pip install --upgrade pip && \
   pip install --upgrade --no-cache-dir "liana"
 
 LABEL org.opencontainers.image.description="Companion container for running component dataset_loaders infer_truth"
-LABEL org.opencontainers.image.created="2024-08-26T21:13:31Z"
+LABEL org.opencontainers.image.created="2024-08-26T21:15:54Z"
 LABEL org.opencontainers.image.source="https://github.com/openproblems-bio/task_cell_cell_communication"
-LABEL org.opencontainers.image.revision="6dd67c464127defc2b827d2e28817b093048b925"
+LABEL org.opencontainers.image.revision="91fed210c132e880b83a00a90d8d603d2e842537"
 LABEL org.opencontainers.image.version="build_main"
 
 VIASHDOCKER
@@ -1036,7 +1036,7 @@ from funs import non_mirrored_product, onehot_groupby, format_truth
 
 # read the dataset
 adata = ad.read_h5ad(par["input"])
-adata.uns['dataset_organism'] = 'homo_sapiens' # NOTE:: Delete
+
 # Get needed params
 groupby = 'cell_type' 
 organism = adata.uns['dataset_organism']
@@ -1046,7 +1046,7 @@ li.ut.spatial_neighbors(adata, bandwidth=1000, max_neighbours=10)
 ctdata = onehot_groupby(adata, groupby=groupby)
 
 organism = adata.uns['dataset_organism']
-resource_name = 'mouseconsesnsus' if organism == 'mouse' else 'consensus'
+resource_name = 'mouseconsensus' if organism == 'mus musculus' else 'consensus'
 
 lr = li.mt.bivariate(adata,
                      global_name='morans',

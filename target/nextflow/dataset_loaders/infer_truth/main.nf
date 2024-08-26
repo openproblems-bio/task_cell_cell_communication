@@ -2951,7 +2951,7 @@ meta = [
     "engine" : "docker",
     "output" : "target/nextflow/dataset_loaders/infer_truth",
     "viash_version" : "0.9.0-RC7",
-    "git_commit" : "6dd67c464127defc2b827d2e28817b093048b925",
+    "git_commit" : "91fed210c132e880b83a00a90d8d603d2e842537",
     "git_remote" : "https://github.com/openproblems-bio/task_cell_cell_communication"
   },
   "package_config" : {
@@ -3099,7 +3099,7 @@ from funs import non_mirrored_product, onehot_groupby, format_truth
 
 # read the dataset
 adata = ad.read_h5ad(par["input"])
-adata.uns['dataset_organism'] = 'homo_sapiens' # NOTE:: Delete
+
 # Get needed params
 groupby = 'cell_type' 
 organism = adata.uns['dataset_organism']
@@ -3109,7 +3109,7 @@ li.ut.spatial_neighbors(adata, bandwidth=1000, max_neighbours=10)
 ctdata = onehot_groupby(adata, groupby=groupby)
 
 organism = adata.uns['dataset_organism']
-resource_name = 'mouseconsesnsus' if organism == 'mouse' else 'consensus'
+resource_name = 'mouseconsensus' if organism == 'mus musculus' else 'consensus'
 
 lr = li.mt.bivariate(adata,
                      global_name='morans',
