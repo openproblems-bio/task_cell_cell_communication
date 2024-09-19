@@ -3,11 +3,11 @@ import liana as li
 
 ## VIASH START
 par = {
-  "input": "resources/datasets/SCP2167/raw_dataset.h5ad",
-  "output": "resources/datasets/SCP2167/dataset_with_inferred_truth.h5ad"
+  "input": "resources_test/task_cell_cell_communication/slidetags_human_brain/raw_spatial.h5ad",
+  "output": "output.h5ad"
 }
 meta = {
-  "resources_dir": "src/dataset_loaders/infer_truth/"
+  "resources_dir": "src/data_processors/infer_truth"
 }
 ## VIASH END
 
@@ -17,6 +17,8 @@ from funs import non_mirrored_product, onehot_groupby, format_truth
 
 # read the dataset
 adata = ad.read_h5ad(par["input"])
+adata.X = adata.layers["counts"]
+adata.var.index = adata.var["feature_name"]
 
 # Get needed params
 groupby = 'cell_type' 
@@ -27,13 +29,16 @@ li.ut.spatial_neighbors(adata, bandwidth=1000, max_neighbours=10)
 ctdata = onehot_groupby(adata, groupby=groupby)
 
 organism = adata.uns['dataset_organism']
-resource_name = 'mouseconsensus' if organism == 'mus musculus' else 'consensus'
+resource_name_map = {
+  "homo_sapiens": "consensus",
+  "mus_musculus": "mouseconsensus"
+}
 
 lr = li.mt.bivariate(adata,
                      global_name='morans',
                      local_name=None,
                      use_raw=False,
-                     resource_name=resource_name,
+                     resource_name=resource_name_map[organism],
                      verbose=True,
                      n_perms=1000)
 
