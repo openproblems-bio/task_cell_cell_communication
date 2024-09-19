@@ -1,17 +1,17 @@
-name: download_singlecell_broadinstitute_dataset
-namespace: dataset_loaders
+name: singlecell_broadinstitute
+namespace: datasets/loaders
 argument_groups:
   - name: Inputs
     arguments:
       - type: file
-        name: --dataset_curl_config
+        name: --raw_data_dir
         description: |
-          Path to the single-cell dataset curl config file as provided by the Broad Institute.
+          Path to the single-cell dataset dir.
 
-          This file is obtained by browsing one of the datasets on the single cell broad institute website and clicking 'Bulk download' and downloading the curl config file but not yet downloading the individual files.
+          This directory is obtained by browsing one of the datasets on the single cell broad institute website and clicking 'Bulk download' and downloading the curl config file but not yet downloading the individual files.
 
           Example: https://singlecell.broadinstitute.org/single_cell/study/SCP2162/slide-tags-snrna-seq-on-mouse-hippocampus#study-download
-        example: resources/datasets/raw/singlecell_broadinstitute_configs/SCP2162.txt
+        example: resources/raw_data/singlecell_broadinstitute/SCP2167
         required: true
         direction: input
   - name: Metadata
@@ -47,11 +47,10 @@ argument_groups:
   - name: Outputs
     arguments:
     - name: --output
-      type: file
       description: "The downloaded dataset with metadata in uns."
       required: true
       direction: output
-      example: dataset.h5ad
+      __merge__: /src/api/file_common_spatial.yaml
 resources:
   - type: python_script
     path: script.py
@@ -60,7 +59,7 @@ test_resources:
     path: /common/component_tests/run_and_check_output.py
 engines:
   - type: docker
-    image: ghcr.io/openproblems-bio/base_python:1.0.4
+    image: openproblems/base_python:1.0.0
 runners:
   - type: executable
   - type: nextflow
