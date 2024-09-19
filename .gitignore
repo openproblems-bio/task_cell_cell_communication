@@ -1,4 +1,10 @@
 /resources
+/resources_test
 /work
 /.nextflow*
 /target
+/output
+/temp
+/.vscode
+__pycache__
+.ipynb_checkpoints
