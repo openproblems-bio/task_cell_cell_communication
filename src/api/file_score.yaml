@@ -1,5 +1,5 @@
 type: file
-example: "resources_test/cell_cell_communication_source_target/allen_brain_atlas/dataset.h5ad"
+example: "resources_test/task_cell_cell_communication/singlecell_broadinstitute_scp2167_human_brain/score.h5ad"
 label: "Score"
 summary: "Metric score file"
 info:

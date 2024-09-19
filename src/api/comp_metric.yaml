@@ -7,8 +7,8 @@ info:
     description: |
       A metric for evaluating sc-CCC method predictions.
 arguments:
-  - name: "--ground_truth"
-    __merge__: file_ground_truth.yaml
+  - name: "--solution"
+    __merge__: file_solution.yaml
     direction: input
     required: true
   - name: "--prediction"
@@ -24,6 +24,6 @@ test_resources:
     path: /src/common/comp_tests/check_config.py
   - type: python_script
     path: /src/common/comp_tests/run_and_check_output.py
-  - path: /resources/datasets
-    dest: resources/datasets
+  - path: /resources_test/task_cell_cell_communication
+    dest: resources_test/task_cell_cell_communication
       
