@@ -24,7 +24,7 @@ resources:
   - path: /common/helper_functions/subset_h5ad_by_format.py
 test_resources:
   - type: python_script
-    path: /common/src/component_tests/run_and_check_output.py
+    path: /common/component_tests/run_and_check_output.py
   - path: /resources_test/task_cell_cell_communication
     dest: resources_test/task_cell_cell_communication
 engines:
