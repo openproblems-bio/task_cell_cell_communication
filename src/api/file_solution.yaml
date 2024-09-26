@@ -1,0 +1,61 @@
+type: file
+example: "resources_test/task_cell_cell_communication/singlecell_broadinstitute_scp2167_human_brain/solution.h5ad"
+label: "Solution"
+summary: "A dataset with ground-truth annotations for the sc-CCC task."
+info:
+  format:
+    type: h5ad
+    uns:
+      - type: string
+        name: dataset_id
+        description: "A unique identifier for the dataset"
+        required: true
+      - name: dataset_name
+        type: string
+        description: Nicely formatted name.
+        required: true
+      - type: string
+        name: dataset_url
+        description: Link to the original source of the dataset.
+        required: false
+      - name: dataset_reference
+        type: string
+        description: Bibtex reference of the paper in which the dataset was published.
+        required: false
+      - name: dataset_summary
+        type: string
+        description: Short description of the dataset.
+        required: true
+      - name: dataset_description
+        type: string
+        description: Long description of the dataset.
+        required: true
+      - name: dataset_organism
+        type: string
+        description: The organism of the sample in the dataset.
+        required: false
+      - type: object # todo: change to 'dataframe'
+        name: assumed_truth
+        description: A dataframe with the assumed ground truth. Must have columns 'source_cell_type', 'target_cell_type', 'ligand', 'receptor', 'colocalised'.
+        required: true
+        # columns:
+        #   - type: string
+        #     name: source_cell_type
+        #     description: The source cell type.
+        #     required: true
+        #   - type: string
+        #     name: target_cell_type
+        #     description: The target cell type.
+        #     required: true
+        #   - type: string
+        #     name: ligand
+        #     description: The ligand.
+        #     required: true
+        #   - type: string
+        #     name: receptor
+        #     description: The receptor.
+        #     required: true
+        #   - type: boolean
+        #     name: colocalised
+        #     description: Whether or not the ligand and receptor are colocalised.
+        #     required: true

@@ -1,0 +1,35 @@
+name: process_dataset
+namespace: data_processors
+arguments:
+  - type: file
+    name: --input
+    description: "The spatial dataset with inferred ground truth"
+    example: "dataset.h5ad"
+    required: true
+  - type: file
+    name: --output_dataset
+    description: "A dataset for the sc-CCC task."
+    example: "dataset.h5ad"
+    required: true
+    direction: output
+  - type: file
+    name: --output_solution
+    description: "The inferred ground-truth annotations for the sc-CCC task."
+    example: "dataset.h5ad"
+    required: true
+    direction: output
+resources:
+  - type: python_script
+    path: script.py
+  - path: /common/helper_functions/subset_h5ad_by_format.py
+test_resources:
+  - type: python_script
+    path: /common/component_tests/run_and_check_output.py
+  - path: /resources_test/task_cell_cell_communication
+    dest: resources_test/task_cell_cell_communication
+engines:
+  - type: docker
+    image: openproblems/base_python:1.0.0
+runners:
+  - type: executable
+  - type: nextflow

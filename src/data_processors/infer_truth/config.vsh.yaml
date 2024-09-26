@@ -1,0 +1,31 @@
+name: infer_truth
+namespace: data_processors
+arguments:
+  - name: --input
+    __merge__: /src/api/file_common_spatial.yaml
+    description: "The spatial dataset to process."
+    required: true
+  - type: file
+    name: --output
+    description: "The output file with inferred ground truth."
+    example: "dataset.h5ad"
+    required: true
+    direction: output
+resources:
+  - type: python_script
+    path: script.py
+  - path: funs.py
+test_resources:
+  - type: python_script
+    path: /common/src/component_tests/run_and_check_output.py
+  - path: /resources_test/common
+    dest: resources_test/common
+engines:
+  - type: docker
+    image: openproblems/base_python:1.0.0
+    setup:
+    - type: python
+      pypi: liana
+runners:
+  - type: executable
+  - type: nextflow

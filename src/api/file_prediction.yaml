@@ -1,0 +1,24 @@
+type: file
+example: "resources_test/task_cell_cell_communication/singlecell_broadinstitute_scp2167_human_brain/prediction.h5ad"
+label: "Prediction"
+summary: "The prediction file"
+info:
+  slots:
+    uns:
+      - type: string
+        name: dataset_id
+        description: "A unique identifier for the dataset"
+        required: true
+      - type: string
+        name: normalization_id
+        description: "Which normalization was used"
+        required: true
+      - type: string
+        name: method_id
+        description: "A unique identifier for the method"
+        required: true
+      - type: object # todo: change to 'dataframe'
+        name: ccc_pred
+        description: A data frame with the predicted cell-cell communication pairs. Must have columns '...'
+        required: true
+        columns: [] # todo: add columns

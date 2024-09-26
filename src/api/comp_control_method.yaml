@@ -11,8 +11,8 @@ arguments:
     __merge__: file_dataset.yaml
     required: true
     direction: input
-  - name: --ground_truth
-    __merge__: file_ground_truth.yaml
+  - name: --solution
+    __merge__: file_solution.yaml
     required: false
     direction: input
   - name: --prediction
@@ -21,8 +21,8 @@ arguments:
     direction: output
 test_resources:
   - type: python_script
-    path: /common/src/component_tests/run_and_check_output.py
+    path: /common/component_tests/run_and_check_output.py
   - type: python_script
     path: /common/component_tests/check_config.py
-  - path: /resources/datasets
-    dest: resources/datasets
+  - path: /resources_test/task_cell_cell_communication
+    dest: resources_test/task_cell_cell_communication

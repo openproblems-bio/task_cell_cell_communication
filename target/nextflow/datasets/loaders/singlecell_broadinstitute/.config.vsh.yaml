@@ -1,0 +1,439 @@
+name: "singlecell_broadinstitute"
+namespace: "datasets/loaders"
+version: "build_main"
+argument_groups:
+- name: "Inputs"
+  arguments:
+  - type: "file"
+    name: "--raw_data_dir"
+    description: "Path to the single-cell dataset dir.\n\nThis directory is obtained\
+      \ by browsing one of the datasets on the single cell broad institute website\
+      \ and clicking 'Bulk download' and downloading the curl config file but not\
+      \ yet downloading the individual files.\n\nExample: https://singlecell.broadinstitute.org/single_cell/study/SCP2162/slide-tags-snrna-seq-on-mouse-hippocampus#study-download\n"
+    info: null
+    example:
+    - "resources/raw_data/singlecell_broadinstitute/SCP2167"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+- name: "Metadata"
+  arguments:
+  - type: "string"
+    name: "--dataset_id"
+    description: "Unique identifier for the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_name"
+    description: "Nicely formatted name."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_url"
+    description: "Link to the original source of the dataset."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_reference"
+    description: "Bibtex reference of the paper in which the dataset was published."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_summary"
+    description: "Short description of the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_description"
+    description: "Long description of the dataset."
+    info: null
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "string"
+    name: "--dataset_organism"
+    description: "The organism of the dataset."
+    info: null
+    required: false
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+- name: "Outputs"
+  arguments:
+  - type: "file"
+    name: "--output"
+    label: "Raw spatial dataset"
+    summary: "An unprocessed dataset as output by a dataset loader."
+    description: "The downloaded dataset with metadata in uns."
+    info:
+      format:
+        type: "h5ad"
+        layers:
+        - type: "integer"
+          name: "counts"
+          description: "Raw counts"
+          required: true
+        obs:
+        - type: "string"
+          name: "dataset_id"
+          description: "Identifier for the dataset from which the cell data is derived,\
+            \ useful for tracking and referencing purposes."
+          required: false
+        - type: "string"
+          name: "assay"
+          description: "Type of assay used to generate the cell data, indicating the\
+            \ methodology or technique employed."
+          required: false
+        - type: "string"
+          name: "assay_ontology_term_id"
+          description: "Experimental Factor Ontology (`EFO:`) term identifier for\
+            \ the assay, providing a standardized reference to the assay type."
+          required: false
+        - type: "string"
+          name: "cell_type"
+          description: "Classification of the cell type based on its characteristics\
+            \ and function within the tissue or organism."
+          required: false
+        - type: "string"
+          name: "cell_type_ontology_term_id"
+          description: "Cell Ontology (`CL:`) term identifier for the cell type, offering\
+            \ a standardized reference to the specific cell classification."
+          required: false
+        - type: "string"
+          name: "development_stage"
+          description: "Stage of development of the organism or tissue from which\
+            \ the cell is derived, indicating its maturity or developmental phase."
+          required: false
+        - type: "string"
+          name: "development_stage_ontology_term_id"
+          description: "Ontology term identifier for the developmental stage, providing\
+            \ a standardized reference to the organism's developmental phase.\n\n\
+            If the organism is human (`organism_ontology_term_id == 'NCBITaxon:9606'`),\
+            \ then the Human Developmental Stages (`HsapDv:`) ontology is used.  \n\
+            If the organism is mouse (`organism_ontology_term_id == 'NCBITaxon:10090'`),\
+            \ then the Mouse Developmental Stages (`MmusDv:`) ontology is used.\n\
+            Otherwise, the Uberon (`UBERON:`) ontology is used.\n"
+          required: false
+        - type: "string"
+          name: "disease"
+          description: "Information on any disease or pathological condition associated\
+            \ with the cell or donor."
+          required: false
+        - type: "string"
+          name: "disease_ontology_term_id"
+          description: "Ontology term identifier for the disease, enabling standardized\
+            \ disease classification and referencing.\n\nMust be a term from the Mondo\
+            \ Disease Ontology (`MONDO:`) ontology term, or `PATO:0000461` from the\
+            \ Phenotype And Trait Ontology (`PATO:`).\n"
+          required: false
+        - type: "string"
+          name: "donor_id"
+          description: "Identifier for the donor from whom the cell sample is obtained."
+          required: false
+        - type: "boolean"
+          name: "is_primary_data"
+          description: "Indicates whether the data is primary (directly obtained from\
+            \ experiments) or has been computationally derived from other primary\
+            \ data."
+          required: false
+        - type: "string"
+          name: "organism"
+          description: "Organism from which the cell sample is obtained."
+          required: false
+        - type: "string"
+          name: "organism_ontology_term_id"
+          description: "Ontology term identifier for the organism, providing a standardized\
+            \ reference for the organism.\n\nMust be a term from the NCBI Taxonomy\
+            \ Ontology (`NCBITaxon:`) which is a child of `NCBITaxon:33208`.\n"
+          required: false
+        - type: "string"
+          name: "self_reported_ethnicity"
+          description: "Ethnicity of the donor as self-reported, relevant for studies\
+            \ considering genetic diversity and population-specific traits."
+          required: false
+        - type: "string"
+          name: "self_reported_ethnicity_ontology_term_id"
+          description: "Ontology term identifier for the self-reported ethnicity,\
+            \ providing a standardized reference for ethnic classifications.\n\nIf\
+            \ the organism is human (`organism_ontology_term_id == 'NCBITaxon:9606'`),\
+            \ then the Human Ancestry Ontology (`HANCESTRO:`) is used.\n"
+          required: false
+        - type: "string"
+          name: "sex"
+          description: "Biological sex of the donor or source organism, crucial for\
+            \ studies involving sex-specific traits or conditions."
+          required: false
+        - type: "string"
+          name: "sex_ontology_term_id"
+          description: "Ontology term identifier for the biological sex, ensuring\
+            \ standardized classification of sex. Only `PATO:0000383`, `PATO:0000384`\
+            \ and `PATO:0001340` are allowed."
+          required: false
+        - type: "string"
+          name: "suspension_type"
+          description: "Type of suspension or medium in which the cells were stored\
+            \ or processed, important for understanding cell handling and conditions."
+          required: false
+        - type: "string"
+          name: "tissue"
+          description: "Specific tissue from which the cells were derived, key for\
+            \ context and specificity in cell studies."
+          required: false
+        - type: "string"
+          name: "tissue_ontology_term_id"
+          description: "Ontology term identifier for the tissue, providing a standardized\
+            \ reference for the tissue type.\n\nFor organoid or tissue samples, the\
+            \ Uber-anatomy ontology (`UBERON:`) is used. The term ids must be a child\
+            \ term of `UBERON:0001062` (anatomical entity).\nFor cell cultures, the\
+            \ Cell Ontology (`CL:`) is used. The term ids cannot be `CL:0000255`,\
+            \ `CL:0000257` or `CL:0000548`.\n"
+          required: false
+        - type: "string"
+          name: "tissue_general"
+          description: "General category or classification of the tissue, useful for\
+            \ broader grouping and comparison of cell data."
+          required: false
+        - type: "string"
+          name: "tissue_general_ontology_term_id"
+          description: "Ontology term identifier for the general tissue category,\
+            \ aiding in standardizing and grouping tissue types.\n\nFor organoid or\
+            \ tissue samples, the Uber-anatomy ontology (`UBERON:`) is used. The term\
+            \ ids must be a child term of `UBERON:0001062` (anatomical entity).\n\
+            For cell cultures, the Cell Ontology (`CL:`) is used. The term ids cannot\
+            \ be `CL:0000255`, `CL:0000257` or `CL:0000548`.\n"
+          required: false
+        - type: "string"
+          name: "batch"
+          description: "A batch identifier. This label is very context-dependent and\
+            \ may be a combination of the tissue, assay, donor, etc."
+          required: false
+        var:
+        - type: "string"
+          name: "feature_id"
+          description: "Ensemble gene ID."
+          required: false
+        - type: "string"
+          name: "feature_symbol"
+          description: "Gene symbol."
+          required: true
+        obsm:
+        - type: "double"
+          name: "spatial"
+          description: "Spatial coordinates."
+          required: true
+        uns:
+        - type: "string"
+          name: "dataset_id"
+          description: "A unique identifier for the dataset"
+          required: true
+        - name: "dataset_name"
+          type: "string"
+          description: "Nicely formatted name."
+          required: true
+        - type: "string"
+          name: "dataset_url"
+          description: "Link to the original source of the dataset."
+          required: false
+        - name: "dataset_reference"
+          type: "string"
+          description: "Bibtex reference of the paper in which the dataset was published."
+          required: false
+        - name: "dataset_summary"
+          type: "string"
+          description: "Short description of the dataset."
+          required: true
+        - name: "dataset_description"
+          type: "string"
+          description: "Long description of the dataset."
+          required: true
+        - name: "dataset_organism"
+          type: "string"
+          description: "The organism of the sample in the dataset."
+          required: false
+    example:
+    - "resources_test/common/singlecell_broadinstitute_scp2167_human_brain/dataset.h5ad"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "output"
+    multiple: false
+    multiple_sep: ";"
+resources:
+- type: "python_script"
+  path: "script.py"
+  is_executable: true
+test_resources:
+- type: "python_script"
+  path: "run_and_check_output.py"
+  is_executable: true
+info: null
+status: "enabled"
+repositories:
+- type: "github"
+  name: "openproblems"
+  repo: "openproblems-bio/openproblems"
+  tag: "build/main"
+- type: "github"
+  name: "core"
+  repo: "openproblems-bio/core"
+  tag: "build/main"
+  path: "viash/core"
+license: "MIT"
+links:
+  repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+  docker_registry: "ghcr.io"
+runners:
+- type: "executable"
+  id: "executable"
+  docker_setup_strategy: "ifneedbepullelsecachedbuild"
+- type: "nextflow"
+  id: "nextflow"
+  directives:
+    tag: "$id"
+  auto:
+    simplifyInput: true
+    simplifyOutput: false
+    transcript: false
+    publish: false
+  config:
+    labels:
+      lowmem: "memory = 20.Gb"
+      midmem: "memory = 50.Gb"
+      highmem: "memory = 100.Gb"
+      lowcpu: "cpus = 5"
+      midcpu: "cpus = 15"
+      highcpu: "cpus = 30"
+      lowtime: "time = 1.h"
+      midtime: "time = 4.h"
+      hightime: "time = 8.h"
+      veryhightime: "time = 24.h"
+  debug: false
+  container: "docker"
+engines:
+- type: "docker"
+  id: "docker"
+  image: "openproblems/base_python:1.0.0"
+  namespace_separator: "/"
+  entrypoint: []
+  cmd: null
+build_info:
+  config: "src/datasets/loaders/singlecell_broadinstitute/config.vsh.yaml"
+  runner: "nextflow"
+  engine: "docker"
+  output: "target/nextflow/datasets/loaders/singlecell_broadinstitute"
+  executable: "target/nextflow/datasets/loaders/singlecell_broadinstitute/main.nf"
+  viash_version: "0.9.0"
+  git_commit: "b800f11f3fe945aa0794472a98a075e92230e193"
+  git_remote: "https://github.com/openproblems-bio/task_cell_cell_communication"
+package_config:
+  name: "task_cell_cell_communication"
+  version: "build_main"
+  label: "Cell-Cell Communication"
+  summary: "Predicting cell-cell interactions between source cell types and target\
+    \ cell types."
+  description: "The growing availability of single-cell data has sparked an increased\
+    \ interest in the inference of cell-cell communication (CCC),\nwith an ever-growing\
+    \ number of computational tools developed for this purpose.\n\nDifferent tools\
+    \ propose distinct preprocessing steps with diverse scoring functions that are\
+    \ challenging to compare and evaluate.\nFurthermore, each tool typically comes\
+    \ with its own set of prior knowledge. To harmonize these,\nDimitrov et al recently\
+    \ developed the [LIANA+](https://github.com/saezlab/liana-py) framework, which\
+    \ was used as a foundation for this task.\n\nThe challenges in evaluating the\
+    \ tools are further exacerbated by the lack of a gold standard to benchmark the\
+    \ performance of CCC\nmethods. In an attempt to address this, Dimitrov et al use\
+    \ alternative data modalities, including the spatial proximity of cell types\n\
+    and downstream cytokine activities, to generate an inferred ground truth. However,\
+    \ these modalities are only approximations of\nbiological reality and come with\
+    \ their own assumptions and limitations. In time, the inclusion of more datasets\
+    \ with known ground\ntruth interactions will become available, from which the\
+    \ limitations and advantages of the different CCC methods will be better understood.\n\
+    This subtask evaluates methods in their ability to predict interactions between\
+    \ spatially-adjacent source cell types and target\ncell types. This subtask focuses\
+    \ on the prediction of interactions from steady-state, or single-context, single-cell\
+    \ data.\n"
+  info:
+    image: "thumbnail.svg"
+    test_resources:
+    - type: "s3"
+      path: "s3://openproblems-data/resources_test/common/singlecell_broadinstitute_scp2167_human_brain/"
+      dest: "resources_test/common/singlecell_broadinstitute_scp2167_human_brain/"
+    - type: "s3"
+      path: "s3://openproblems-data/resources_test/task_cell_cell_communication"
+      dest: "resources_test/task_cell_cell_communication"
+  repositories:
+  - type: "github"
+    name: "openproblems"
+    repo: "openproblems-bio/openproblems"
+    tag: "build/main"
+  - type: "github"
+    name: "core"
+    repo: "openproblems-bio/core"
+    tag: "build/main"
+    path: "viash/core"
+  viash_version: "0.9.0"
+  source: "src"
+  target: "target"
+  config_mods:
+  - ".runners[.type == \"nextflow\"].config.labels := { lowmem : \"memory = 20.Gb\"\
+    , midmem : \"memory = 50.Gb\", highmem : \"memory = 100.Gb\", lowcpu : \"cpus\
+    \ = 5\", midcpu : \"cpus = 15\", highcpu : \"cpus = 30\", lowtime : \"time = 1.h\"\
+    , midtime : \"time = 4.h\", hightime : \"time = 8.h\", veryhightime : \"time =\
+    \ 24.h\" }\n"
+  authors:
+  - name: "Daniel Dimitrov"
+    roles:
+    - "maintainer"
+    - "author"
+    info:
+      github: "dbdimitrov"
+  - name: "Scott Gigante"
+    roles:
+    - "contributor"
+    info:
+      github: "scottgigante"
+      orcid: "0000-0002-4544-2764"
+  - name: "Robrecht Cannoodt"
+    roles:
+    - "contributor"
+    info:
+      github: "rcannood"
+      orcid: "0000-0003-3641-729X"
+  - name: "Vishnuvasan Raghuraman"
+    roles:
+    - "contributor"
+    info:
+      github: "vishnu-vasan"
+  keywords:
+  - "single-cell"
+  - "cell-cell communication"
+  - "openproblems"
+  - "benchmark"
+  license: "MIT"
+  organization: "openproblems-bio"
+  references:
+    doi:
+    - "10.1038/s41467-022-30755-0"
+    - "10.1038/s41556-024-01469-w"
+  links:
+    repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+    docker_registry: "ghcr.io"
+    issue_tracker: "https://github.com/openproblems-bio/task_cell_cell_communication/issues"

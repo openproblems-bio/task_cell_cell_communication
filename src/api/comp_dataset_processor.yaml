@@ -5,22 +5,17 @@ info:
     label: Dataset Processor
     summary: A dataset processor for the sc-CCC task.
     description: |
-      A component which splits up an annotated dataset into the single-cell dataset and the ground-truth annotations.
+      This processor infers ground-truth annotations from a spatial dataset and splits it into the single-cell dataset and the ground-truth annotations.
 arguments:
-  - name: --dataset_with_ground_truth
-    __merge__: file_dataset_with_ground_truth.yaml
+  - name: --input
+    __merge__: file_common_spatial.yaml
     required: true
     direction: input
-  - name: --dataset
+  - name: --output_dataset
     __merge__: file_dataset.yaml
     required: true
     direction: output
-  - name: --ground_truth
-    __merge__: file_ground_truth.yaml
+  - name: --output_solution
+    __merge__: file_solution.yaml
     required: true
     direction: output
-test_resources:
-  - type: python_script
-    path: /common/src/component_tests/run_and_check_output.py
-  - path: /resources/datasets
-    dest: resources/datasets

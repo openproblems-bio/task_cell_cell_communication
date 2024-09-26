@@ -1,0 +1,12 @@
+__merge__: /src/api/comp_dataset_processor.yaml
+name: workflow
+namespace: dataset_loaders
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+dependencies:
+  - name: data_processors/infer_truth
+  - name: data_processors/process_dataset
+runners:
+  - type: nextflow

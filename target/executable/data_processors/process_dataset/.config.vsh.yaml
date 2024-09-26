@@ -1,0 +1,207 @@
+name: "process_dataset"
+namespace: "data_processors"
+version: "build_main"
+argument_groups:
+- name: "Arguments"
+  arguments:
+  - type: "file"
+    name: "--input"
+    description: "The spatial dataset with inferred ground truth"
+    info: null
+    example:
+    - "dataset.h5ad"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "input"
+    multiple: false
+    multiple_sep: ";"
+  - type: "file"
+    name: "--output_dataset"
+    description: "A dataset for the sc-CCC task."
+    info: null
+    example:
+    - "dataset.h5ad"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "output"
+    multiple: false
+    multiple_sep: ";"
+  - type: "file"
+    name: "--output_solution"
+    description: "The inferred ground-truth annotations for the sc-CCC task."
+    info: null
+    example:
+    - "dataset.h5ad"
+    must_exist: true
+    create_parent: true
+    required: true
+    direction: "output"
+    multiple: false
+    multiple_sep: ";"
+resources:
+- type: "python_script"
+  path: "script.py"
+  is_executable: true
+- type: "file"
+  path: "subset_h5ad_by_format.py"
+test_resources:
+- type: "python_script"
+  path: "run_and_check_output.py"
+  is_executable: true
+- type: "file"
+  path: "resources_test/task_cell_cell_communication"
+  dest: "resources_test/task_cell_cell_communication"
+info: null
+status: "enabled"
+repositories:
+- type: "github"
+  name: "openproblems"
+  repo: "openproblems-bio/openproblems"
+  tag: "build/main"
+- type: "github"
+  name: "core"
+  repo: "openproblems-bio/core"
+  tag: "build/main"
+  path: "viash/core"
+license: "MIT"
+links:
+  repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+  docker_registry: "ghcr.io"
+runners:
+- type: "executable"
+  id: "executable"
+  docker_setup_strategy: "ifneedbepullelsecachedbuild"
+- type: "nextflow"
+  id: "nextflow"
+  directives:
+    tag: "$id"
+  auto:
+    simplifyInput: true
+    simplifyOutput: false
+    transcript: false
+    publish: false
+  config:
+    labels:
+      lowmem: "memory = 20.Gb"
+      midmem: "memory = 50.Gb"
+      highmem: "memory = 100.Gb"
+      lowcpu: "cpus = 5"
+      midcpu: "cpus = 15"
+      highcpu: "cpus = 30"
+      lowtime: "time = 1.h"
+      midtime: "time = 4.h"
+      hightime: "time = 8.h"
+      veryhightime: "time = 24.h"
+  debug: false
+  container: "docker"
+engines:
+- type: "docker"
+  id: "docker"
+  image: "openproblems/base_python:1.0.0"
+  namespace_separator: "/"
+  entrypoint: []
+  cmd: null
+build_info:
+  config: "src/data_processors/process_dataset/config.vsh.yaml"
+  runner: "executable"
+  engine: "docker"
+  output: "target/executable/data_processors/process_dataset"
+  executable: "target/executable/data_processors/process_dataset/process_dataset"
+  viash_version: "0.9.0"
+  git_commit: "b800f11f3fe945aa0794472a98a075e92230e193"
+  git_remote: "https://github.com/openproblems-bio/task_cell_cell_communication"
+package_config:
+  name: "task_cell_cell_communication"
+  version: "build_main"
+  label: "Cell-Cell Communication"
+  summary: "Predicting cell-cell interactions between source cell types and target\
+    \ cell types."
+  description: "The growing availability of single-cell data has sparked an increased\
+    \ interest in the inference of cell-cell communication (CCC),\nwith an ever-growing\
+    \ number of computational tools developed for this purpose.\n\nDifferent tools\
+    \ propose distinct preprocessing steps with diverse scoring functions that are\
+    \ challenging to compare and evaluate.\nFurthermore, each tool typically comes\
+    \ with its own set of prior knowledge. To harmonize these,\nDimitrov et al recently\
+    \ developed the [LIANA+](https://github.com/saezlab/liana-py) framework, which\
+    \ was used as a foundation for this task.\n\nThe challenges in evaluating the\
+    \ tools are further exacerbated by the lack of a gold standard to benchmark the\
+    \ performance of CCC\nmethods. In an attempt to address this, Dimitrov et al use\
+    \ alternative data modalities, including the spatial proximity of cell types\n\
+    and downstream cytokine activities, to generate an inferred ground truth. However,\
+    \ these modalities are only approximations of\nbiological reality and come with\
+    \ their own assumptions and limitations. In time, the inclusion of more datasets\
+    \ with known ground\ntruth interactions will become available, from which the\
+    \ limitations and advantages of the different CCC methods will be better understood.\n\
+    This subtask evaluates methods in their ability to predict interactions between\
+    \ spatially-adjacent source cell types and target\ncell types. This subtask focuses\
+    \ on the prediction of interactions from steady-state, or single-context, single-cell\
+    \ data.\n"
+  info:
+    image: "thumbnail.svg"
+    test_resources:
+    - type: "s3"
+      path: "s3://openproblems-data/resources_test/common/singlecell_broadinstitute_scp2167_human_brain/"
+      dest: "resources_test/common/singlecell_broadinstitute_scp2167_human_brain/"
+    - type: "s3"
+      path: "s3://openproblems-data/resources_test/task_cell_cell_communication"
+      dest: "resources_test/task_cell_cell_communication"
+  repositories:
+  - type: "github"
+    name: "openproblems"
+    repo: "openproblems-bio/openproblems"
+    tag: "build/main"
+  - type: "github"
+    name: "core"
+    repo: "openproblems-bio/core"
+    tag: "build/main"
+    path: "viash/core"
+  viash_version: "0.9.0"
+  source: "src"
+  target: "target"
+  config_mods:
+  - ".runners[.type == \"nextflow\"].config.labels := { lowmem : \"memory = 20.Gb\"\
+    , midmem : \"memory = 50.Gb\", highmem : \"memory = 100.Gb\", lowcpu : \"cpus\
+    \ = 5\", midcpu : \"cpus = 15\", highcpu : \"cpus = 30\", lowtime : \"time = 1.h\"\
+    , midtime : \"time = 4.h\", hightime : \"time = 8.h\", veryhightime : \"time =\
+    \ 24.h\" }\n"
+  authors:
+  - name: "Daniel Dimitrov"
+    roles:
+    - "maintainer"
+    - "author"
+    info:
+      github: "dbdimitrov"
+  - name: "Scott Gigante"
+    roles:
+    - "contributor"
+    info:
+      github: "scottgigante"
+      orcid: "0000-0002-4544-2764"
+  - name: "Robrecht Cannoodt"
+    roles:
+    - "contributor"
+    info:
+      github: "rcannood"
+      orcid: "0000-0003-3641-729X"
+  - name: "Vishnuvasan Raghuraman"
+    roles:
+    - "contributor"
+    info:
+      github: "vishnu-vasan"
+  keywords:
+  - "single-cell"
+  - "cell-cell communication"
+  - "openproblems"
+  - "benchmark"
+  license: "MIT"
+  organization: "openproblems-bio"
+  references:
+    doi:
+    - "10.1038/s41467-022-30755-0"
+    - "10.1038/s41556-024-01469-w"
+  links:
+    repository: "https://github.com/openproblems-bio/task_cell_cell_communication"
+    docker_registry: "ghcr.io"
+    issue_tracker: "https://github.com/openproblems-bio/task_cell_cell_communication/issues"

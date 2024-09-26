@@ -22,7 +22,14 @@ license: MIT
 keywords: [single-cell, cell-cell communication, openproblems, benchmark]
 references:
   doi:
+    # Dimitrov, D., Türei, D., Garrido-Rodriguez, M. et al. Comparison of methods and resources
+    # for cell-cell communication inference from single-cell RNA-Seq data. Nat Commun 13, 3224 (2022).
+    # https://doi.org/10.1038/s41467-022-30755-0
     - 10.1038/s41467-022-30755-0
+    # Dimitrov, D., Schäfer, P.S.L., Farr, E. et al. LIANA+ provides an all-in-one framework for
+    # cell-cell communication inference. Nat Cell Biol 26, 1613–1622 (2024).
+    # https://doi.org/10.1038/s41556-024-01469-w
+    - 10.1038/s41556-024-01469-w
 links:
   issue_tracker: https://github.com/openproblems-bio/task_cell_cell_communication/issues
   repository: https://github.com/openproblems-bio/task_cell_cell_communication
@@ -32,13 +39,13 @@ organization: openproblems-bio
 viash_version: 0.9.0
 info:
   image: "thumbnail.svg"
-  v1:
-    path: openproblems/tasks/_cell_cell_communication/cell_cell_communication_source_target/README.md
-    commit: 637163f
   test_resources:
     - type: s3
-      path: s3://openproblems-data/resources/cell_cell_communication
-      dest: resources
+      path: s3://openproblems-data/resources_test/common/singlecell_broadinstitute_scp2167_human_brain/
+      dest: resources_test/common/singlecell_broadinstitute_scp2167_human_brain/
+    - type: s3
+      path: s3://openproblems-data/resources_test/task_cell_cell_communication
+      dest: resources_test/task_cell_cell_communication
 authors:
   - name: Daniel Dimitrov
     roles: [maintainer, author]
@@ -49,10 +56,6 @@ authors:
     info:
       github: scottgigante
       orcid: "0000-0002-4544-2764"
-  - name: Daniel Strobl
-    roles: [contributor]
-    info:
-      github: danielStrobl
   - name: Robrecht Cannoodt
     roles: [contributor]
     info:
@@ -62,3 +65,15 @@ authors:
     roles: [contributor]
     info:
       github: vishnu-vasan
+config_mods: |
+  .runners[.type == "nextflow"].config.labels := { lowmem : "memory = 20.Gb", midmem : "memory = 50.Gb", highmem : "memory = 100.Gb", lowcpu : "cpus = 5", midcpu : "cpus = 15", highcpu : "cpus = 30", lowtime : "time = 1.h", midtime : "time = 4.h", hightime : "time = 8.h", veryhightime : "time = 24.h" }
+repositories:
+  - name: openproblems
+    type: github
+    repo: openproblems-bio/openproblems
+    tag: build/main
+  - name: core
+    type: github
+    repo: openproblems-bio/core
+    tag: build/main
+    path: viash/core

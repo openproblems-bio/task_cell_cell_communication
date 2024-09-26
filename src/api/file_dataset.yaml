@@ -1,0 +1,31 @@
+type: file
+example: "resources_test/task_cell_cell_communication/singlecell_broadinstitute_scp2167_human_brain/dataset.h5ad"
+label: "Dataset"
+summary: "A dataset for the sc-CCC task."
+info:
+  format:
+    type: h5ad
+    layers: 
+      - type: integer
+        name: counts
+        description: Raw counts
+        required: true
+    obs:
+      - type: string
+        name: cell_type
+        description: Cell type annotation.
+        required: true
+    var:
+      - type: string
+        name: feature_id
+        description: Ensemble gene ID.
+        required: false
+      - type: string
+        name: feature_symbol
+        description: Gene symbol.
+        required: true
+    uns:
+      - type: string
+        name: dataset_id
+        description: "A unique identifier for the dataset"
+        required: true
